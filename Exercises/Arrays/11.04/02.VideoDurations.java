@@ -23,12 +23,20 @@ public class VideoDurations {
 		for (int i = 0; i < times.size(); i++) {
 			String[] split = times.get(i).split(":");
 			int currentHours = 0;
-			int currentMin = Integer.parseInt(split[0]);
-			int currentSec = Integer.parseInt(split[1]);
+			int currentMin = 0;
+			int currentSec = 0;
+			
 			if (split.length > 2) {
-				currentHours = Integer.parseInt(split[2]);
+				currentHours = Integer.parseInt(split[0]);
+				currentMin = Integer.parseInt(split[1]);
+				currentSec = Integer.parseInt(split[2]);
+			} else {
+				currentMin = Integer.parseInt(split[0]);
+				currentSec = Integer.parseInt(split[1]);
 			}
+			
 			hours += currentHours;
+	
 			if (minutes + currentMin > 59) {
 				hours++;
 				minutes = (currentMin + minutes) - 60;
@@ -41,11 +49,10 @@ public class VideoDurations {
 			} else {
 				seconds += currentSec;
 			}
-			
 		}
 		
 		if (hours > 0) {
-			System.out.printf("%d:%d:%02d",hours, minutes, seconds);
+			System.out.printf("%d:%02d:%02d",hours, minutes, seconds);
 		} else {
 			System.out.printf("%d:%02d", minutes, seconds);			
 		}
