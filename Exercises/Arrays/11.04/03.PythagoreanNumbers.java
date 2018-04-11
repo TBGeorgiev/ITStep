@@ -20,10 +20,10 @@ public class PythagoreanNumbers {
 		
 		for (int i = 0; i < listOfNumbersToCheck.size(); i++) {
 			for (int j = 0; j < listOfNumbersToCheck.size(); j++) {
-				for (int j2 = 0; j2 < listOfNumbersToCheck.size(); j2++) {
+				for (int k = 0; k < listOfNumbersToCheck.size(); k++) {
 					int num1 = listOfNumbersToCheck.get(i);
 					int num2 = listOfNumbersToCheck.get(j);
-					int num3 = listOfNumbersToCheck.get(j2);
+					int num3 = listOfNumbersToCheck.get(k);
 					
 					if (num2 * num2 <= num3 * num3  && (num2 * num2) + (num3 * num3) == num1 * num1) {
 						isFound = true;
