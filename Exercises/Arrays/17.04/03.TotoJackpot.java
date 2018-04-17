@@ -15,29 +15,69 @@ public class Toto
 		
 		int numberOfTickets = scanner.nextInt();
 		
+		int[] winningNumbers = generateWinningNumbers();
+		
+		int[] ticket = new int[winningNumbers.length];
+		
+		
+		
 		scanner.close();
 		
-//		int[] winningNumbers = {2, 46, 31, 16, 33, 5};
-		int[] winningNumbers = {2, 46};
-		
-		int[] ticket = new int[2];
-		
-		int[][] tickets = new int[numberOfTickets][2];
-		
-		
-		startToto(winningNumbers, ticket,tickets, numberOfTickets);
+		startToto(winningNumbers, ticket, numberOfTickets);
 		
 	}
-
-	private static void startToto(int[] winningNumbers, int[] ticket, int[][] tickets, int numberOfTickets)
+	
+	
+	private static int[] generateWinningNumbers() 
 	{
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("How many winning numbers do you want to set?");
+		int number = scanner.nextInt();
+		int[] winningNumbers = new int[number];
+		
+		
+		
+		Random random = new Random(System.currentTimeMillis());
+		
+		for (int i = 0; i < winningNumbers.length; i++)
+		{
+			winningNumbers[i] = random.nextInt(50);
+		}
+		
+		boolean uniqueNumbers = false;
+		
+		while (!uniqueNumbers)
+		{
+			uniqueNumbers = true;
+			for (int i = 0; i < winningNumbers.length; i++)
+			{
+				for (int j = i + 1; j < winningNumbers.length; j++)
+				{
+					if (winningNumbers[i] == winningNumbers[j]) {
+						winningNumbers[i] = random.nextInt(50);
+						uniqueNumbers = false;
+					}
+				}
+			}
+		}
+		
+		return winningNumbers;
+		
+	}
+	
+	
+
+	private static void startToto(int[] winningNumbers, int[] ticket, int numberOfTickets)
+	{
+		System.out.println("Random winning ticket combination: " + Arrays.toString(winningNumbers));
+		
 		int duplicates = 0;
 		
 		List<String> duplicatesList = new ArrayList<>();
 		
 		
 		
-		Random random = new Random(System.currentTimeMillis());
+		Random random = new Random(System.currentTimeMillis() + System.currentTimeMillis());
 		StringBuilder stringBuilder = new StringBuilder();
 		
 		for (int i = 0; i < numberOfTickets; i++) {  // defines number of tickets it will test
