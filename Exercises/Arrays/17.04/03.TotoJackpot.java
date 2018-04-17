@@ -45,7 +45,7 @@ public class Toto
 			for (int j = 0; j < winningNumbers.length; j++) {  // fills up first ticket with random nums
 				int randomNum = random.nextInt(50);
 				if (randomNum == 0) {
-					randomNum = 5;
+					randomNum = j + 1;
 				}
 				ticket[j] = randomNum;
 				if (j + 1 < winningNumbers.length) {
@@ -86,8 +86,10 @@ public class Toto
 			
 			if (winner) {
 				System.out.println("=================================");
-				System.out.println(i + 1 + ": Jackpot!");
+				System.out.println(i + 1 + ": Jackpot! " + Arrays.toString(ticket));
 				System.out.println("=================================");
+				
+				checkForNumberOfDuplicates(duplicates);
 				
 				return;
 			}
@@ -99,6 +101,11 @@ public class Toto
 			stringBuilder.setLength(0);
 		}
 		
+		checkForNumberOfDuplicates(duplicates);
+	}
+
+	private static void checkForNumberOfDuplicates(int duplicates)
+	{
 		if (duplicates > 0) {
 			System.out.println("Duplicates found: " + duplicates);
 		} else {
