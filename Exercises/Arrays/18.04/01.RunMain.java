@@ -1,18 +1,31 @@
 package com.seeburger.run;
 
+import java.util.Scanner;
+
 import com.seeburger.sort.*;
 
 
 public class RunMain
 {
+	private static Scanner scanner = new Scanner(System.in);
+	
 	private static String[] args;
 
 	public static void main(String[] args)
 	{
-		runSelectionSort();
+		listFilesFromDirectory();
 	}
 	
 	
+	
+	
+	private static void listFilesFromDirectory()
+	{
+		System.out.println("Enter the directory's absolute path: ");
+		String path = scanner.nextLine();
+		FileFinder.listAllFilesFromDirectory(path);
+		
+	}
 	
 	
 	private static void runSelectionSort()
