@@ -1,7 +1,9 @@
 package com.seeburger.run;
 
+import java.io.IOException;
 import java.util.Scanner;
 
+import com.seeburger.filemanipulation.ReadFromPropertyFile;
 import com.seeburger.sort.*;
 
 
@@ -11,9 +13,9 @@ public class RunMain
 	
 	private static String[] args;
 
-	public static void main(String[] args)
+	public static void main(String[] args) throws IOException
 	{
-		listFilesFromDirectory();
+		ReadFromPropertyFile.readPropertyFile();
 	}
 	
 	
