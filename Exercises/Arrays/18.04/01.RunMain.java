@@ -1,10 +1,14 @@
 package com.seeburger.run;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
+import com.seeburger.filemanipulation.CopyFile;
 import com.seeburger.filemanipulation.ReadFromPropertyFile;
 import com.seeburger.sort.*;
+import com.seeburger.students.ListOfStudents;
+import com.seeburger.students.Student;
 
 
 public class RunMain
@@ -15,10 +19,36 @@ public class RunMain
 
 	public static void main(String[] args) throws IOException
 	{
-		ReadFromPropertyFile.readPropertyFile();
+		
+		
 	}
 	
 	
+	private static void copyFile(String directoryToSearch, String destinationToCopyFile) throws IOException
+	{
+		File toCopy = CopyFile.findFileToCopy(directoryToSearch);
+		File destFile = CopyFile.generateFileDest(destinationToCopyFile);
+		CopyFile.copeFileUsingStream(toCopy, destFile);
+	}
+	
+	
+	private static void addAndListStudents()
+	{
+		ListOfStudents listOfStudents = new ListOfStudents();
+		
+		listOfStudents.addMultipleStudents();
+		
+		listOfStudents.printAllStudentsToConsole();
+	}
+	
+	
+	
+	
+	
+	private static void readPropertyFile() throws IOException
+	{
+		ReadFromPropertyFile.readPropertyFile();
+	}
 	
 	
 	private static void listFilesFromDirectory()
