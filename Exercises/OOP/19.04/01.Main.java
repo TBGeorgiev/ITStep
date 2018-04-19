@@ -2,13 +2,15 @@ package com.seeburger.run;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.Scanner;
 
+import com.seeburger.filemanipulation.ConnectionToDatabase;
 import com.seeburger.filemanipulation.CopyFile;
+import com.seeburger.filemanipulation.CreateTables;
 import com.seeburger.filemanipulation.ReadFromPropertyFile;
 import com.seeburger.sort.*;
 import com.seeburger.students.ListOfStudents;
-import com.seeburger.students.Student;
 
 
 public class RunMain
@@ -19,7 +21,22 @@ public class RunMain
 
 	public static void main(String[] args) throws IOException
 	{
-		
+		Connection connection = null;
+		try {
+//			System.out.println(System.getProperty("user.dir"));
+			ConnectionToDatabase database = new ConnectionToDatabase();
+			connection = database.databaseConnection();
+			CreateTables tables = new CreateTables();
+			tables.createTable(connection);
+			tables.listDatabase(connection);
+			System.out.println(System.getProperty("java.version"));
+			
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Error");
+		}
 		
 	}
 	
