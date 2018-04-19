@@ -1,73 +1,89 @@
-package com.seeburger.filemanipulation;
+package com.seeburger.run;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.Scanner;
 
-public class CopyFile
+import com.seeburger.filemanipulation.CopyFile;
+import com.seeburger.filemanipulation.ReadFromPropertyFile;
+import com.seeburger.sort.*;
+import com.seeburger.students.ListOfStudents;
+import com.seeburger.students.Student;
+
+
+public class RunMain
 {
+	private static Scanner scanner = new Scanner(System.in);
+	
+	private static String[] args;
 
-	public static void copeFileUsingStream(File source, File dest) throws IOException
+	public static void main(String[] args) throws IOException
 	{
-		InputStream iStream = null;
-		OutputStream outputStream = null;
 		
-		System.out.println(source.getAbsolutePath());
-		System.out.println(dest.getAbsolutePath());
 		
-		try
-		{
-			iStream = new FileInputStream(source);
-			outputStream = new FileOutputStream(dest);
-			byte[] buffer = new byte[512];
-			int length;
-			while ((length = iStream.read(buffer)) > 0) {
-				outputStream.write(buffer, 0, length);
-			}
-			System.out.println(System.currentTimeMillis());
-			
-		} finally
-		{
-			iStream.close();
-			outputStream.close();
-		}
-		{
-			
-		}
 	}
 	
 	
-	public static File generateFileDest(String location)
+	private static void copyFile(String directoryToSearch, String destinationToCopyFile) throws IOException
 	{
-		File file = new File(location);
-		return file;
+		File toCopy = CopyFile.findFileToCopy(directoryToSearch);
+		File destFile = CopyFile.generateFileDest(destinationToCopyFile);
+		CopyFile.copeFileUsingStream(toCopy, destFile);
+	}
+	
+	
+	private static void addAndListStudents()
+	{
+		ListOfStudents listOfStudents = new ListOfStudents();
+		
+		listOfStudents.addMultipleStudents();
+		
+		listOfStudents.printAllStudentsToConsole();
 	}
 	
 	
 	
 	
-	public static File findFileToCopy(String location)
+	
+	private static void readPropertyFile() throws IOException
 	{
-		File folder = new File(location);
+		ReadFromPropertyFile.readPropertyFile();
+	}
+	
+	
+	private static void listFilesFromDirectory()
+	{
+		System.out.println("Enter the directory's absolute path: ");
+		String path = scanner.nextLine();
+		FileFinder.listAllFilesFromDirectory(path);
 		
-		File[] files = folder.listFiles();
-		
-		
-		
-		for (File file : files) {
-			if (file.isDirectory()) {
-				System.out.println(file.getAbsolutePath());
-				findFileToCopy(file.getAbsolutePath());
-			} 
-			else if (!file.isDirectory() && file.length() > 100000) {
-				System.out.println(System.currentTimeMillis());
-				return file;
-			}
-		}
-		
-		return null;	
+	}
+	
+	
+	private static void runSelectionSort()
+	{
+		int[] toSort = BubbleSort.generateRandomArray();
+		SelectionSort.selectionSortOnArrayOfIntegers(toSort);
+		SelectionSort.printArray(toSort);
+	}
+	
+	private static void runBubbleSort()
+	{
+		int[] toSortAndPrint = BubbleSort.generateRandomArray();
+		BubbleSort.sortArrayUsingBubbleSort(toSortAndPrint);
+		BubbleSort.printSortedArray(toSortAndPrint);
+	}
+	
+	private static void runStringComparison()
+	{
+		String[] arrayToCheck = StringsComparison.generateArrayToCheck();
+		String toCheckForInArray = StringsComparison.enterStringToCheck();
+		StringsComparison.checkArrayForString(arrayToCheck, toCheckForInArray);
+	}
+	
+	
+	private static void runMinAndMax()
+	{
+		MinAndMax.main(args);
 	}
 }
