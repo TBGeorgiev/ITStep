@@ -37,16 +37,57 @@ public class RunMain
 	private static String[] args;
 	
 	private static final String fileSource = "C:\\Users\\Public\\Documents";
+	
+	private static volatile int count = 1;
+	
+	
 
 	public static void main(String[] args) 
 	{
-		ExecutorService executorService = Executors.newFixedThreadPool(3);
+		long startTime = System.currentTimeMillis();
+		ExecutorService executorService = Executors.newFixedThreadPool(10);
 		
 		CopyFile copyFile = new CopyFile(executorService);
 		
-		copyFile.findFileToCopy(fileSource);
 		
+		copyFile.findFileToCopy(fileSource, 50);
+			
 		executorService.shutdown();
+		
+		
+
+		while (!executorService.isTerminated())
+		{
+			System.out.println(executorService.isTerminated());
+			Runnable runnable = new Runnable()
+			{
+				
+				@Override
+				public void run()
+				{
+					System.out.println(count);
+					count++;
+					try
+					{
+						Thread.sleep(1000);
+					} catch (InterruptedException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}
+			};
+			
+			Thread thread = new Thread(runnable);
+//			thread.start();
+			
+			runnable.run();
+		}
+		
+		long endTime = System.currentTimeMillis();
+		System.out.println("Total time: " + (endTime - startTime));
+		
 //		new CopyFile().findFileToCopy("C:\\Cisco Packet Tracer 7.0");
 		
 		
