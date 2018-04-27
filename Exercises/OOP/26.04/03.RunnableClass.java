@@ -41,8 +41,8 @@ public class RunnableClass implements Runnable
 		InputStream iStream = null;
 		OutputStream outputStream = null;
 		
-		System.out.println("Source: " + source.getAbsolutePath());
-		System.out.println("Destination: " + dest.getAbsolutePath());
+//		System.out.println("Source: " + source.getAbsolutePath());
+//		System.out.println("Destination: " + dest.getAbsolutePath());
 		
 		try
 		{
