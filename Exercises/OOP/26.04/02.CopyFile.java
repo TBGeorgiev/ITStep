@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 
 public class CopyFile
 {
-
+	private int count;
 	private ExecutorService executorService;
 	private Runnable runnable; 
 	
@@ -45,7 +45,7 @@ public class CopyFile
 			while ((length = iStream.read(buffer)) > 0) {
 				outputStream.write(buffer, 0, length);
 			}
-			System.out.println(System.currentTimeMillis());
+//			System.out.println(System.currentTimeMillis());
 			
 		} finally
 		{
@@ -67,7 +67,7 @@ public class CopyFile
 	
 	
 	
-	public void findFileToCopy(String location)
+	public void findFileToCopy(String location, int numberOfFilesToCopy)
 	{
 		File folder = new File(location);
 		
@@ -77,11 +77,16 @@ public class CopyFile
 		
 		for (File file : files) {
 			
+			if (this.count > numberOfFilesToCopy) {
+				break;
+			}
+			
 			if (file.isDirectory()) {
-				System.out.println(file.getAbsolutePath());
-				findFileToCopy(file.getAbsolutePath());
+//				System.out.println(file.getAbsolutePath());
+				findFileToCopy(file.getAbsolutePath(), numberOfFilesToCopy);
 			} 
 			else if (!file.isDirectory() && file.length() > 100000) {
+				this.count++;
 //				System.out.println(System.currentTimeMillis());
 				RunnableClass runnableClass = new RunnableClass(file, new File(this.folder.getAbsolutePath() 
 						+ File.separator + file.getName()));
