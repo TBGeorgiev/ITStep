@@ -6,6 +6,7 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -15,11 +16,14 @@ public class RunnableClass implements Runnable {
 	private ServerSocket serverSocket;
 	private ExecutorService executorService = Executors.newFixedThreadPool(100);
 	
+	private ArrayList<Socket> sockets;
 	
-	public RunnableClass(int port, Socket socket, ServerSocket serverSocket) {
+	
+	public RunnableClass(int port, Socket socket, ServerSocket serverSocket, ArrayList<Socket> sockets) {
 		this.port = port;
 		this.socket = socket;
 		this.serverSocket = serverSocket;
+		this.sockets = sockets;
 	}
 
 	@Override
@@ -38,15 +42,22 @@ public class RunnableClass implements Runnable {
 			DataOutputStream dout=new DataOutputStream(socket.getOutputStream());  
 			BufferedReader br=new BufferedReader(new InputStreamReader(System.in));  
 			  
-			String str="",str2="";  
+			String str="";  
 			while(!str.equals("stop")){  
 				str=din.readUTF();  
 				System.out.println("client says: "+str);  
-				str2 = str;
+//				str2 = str;
 //				str2=br.readLine();  
-				dout.writeUTF(str2);  
-				dout.flush();  
+//				dout.writeUTF(str2);  
+//				dout.flush();  
+				for (int i = 0; i < sockets.size(); i++) {
+					DataOutputStream dout2 = new DataOutputStream(sockets.get(i).getOutputStream());
+					dout2.writeUTF(str);
+					dout2.flush();
+					
+				}
 			}  
+			
 			din.close();  
 			socket.close();  
 			ss.close();  
