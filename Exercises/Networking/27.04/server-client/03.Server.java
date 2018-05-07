@@ -1,5 +1,3 @@
-package com.seeburger.networking;
-
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -15,10 +13,12 @@ public class Server {
 	
 	private ExecutorService service = Executors.newFixedThreadPool(100);
 	private ArrayList<String> ipAddresses;
+	private ArrayList<Socket> sockets;
 	
 	
 	public Server() {
 		this.ipAddresses = new ArrayList<String>();
+		this.sockets = new ArrayList();
 	}
 	
 	public void startMultiThreadedServer(int port) throws InterruptedException {
@@ -29,7 +29,8 @@ public class Server {
 				
 				Socket socket = serverSocket.accept();
 				if (socket.isConnected()) {
-					RunnableClass runnableClass = new RunnableClass(port, socket, serverSocket);
+					sockets.add(socket);
+					RunnableClass runnableClass = new RunnableClass(port, socket, serverSocket, this.sockets);
 					service.execute(runnableClass);
 					if (!ipAddresses.contains(socket.getInetAddress().toString())) {
 						ipAddresses.add(socket.getInetAddress().toString());
