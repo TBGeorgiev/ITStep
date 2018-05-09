@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.jws.soap.SOAPBinding.Use;
 import javax.print.attribute.standard.MediaSize.NA;
 
 public class Server {
@@ -109,23 +110,36 @@ public class Server {
 		dataOutputStream.writeUTF("Press 1 to log in.\nPress 2 to create a new account.");
 		dataOutputStream.flush();
 		int choice = Integer.parseInt(dataInputStream.readUTF());
-		
+		String email;
+		String password;
 		switch (choice)
 		{
 			case 1:
-			
+				dataOutputStream.writeUTF("Enter your email: ");
+				email = dataInputStream.readUTF();
+				dataOutputStream.writeUTF("Enter your password: ");
+				password = dataInputStream.readUTF();
+				User user2 = findUserToLogIn(email, password);
+				if (user2 != null) {
+					dataOutputStream.writeUTF("Login complete.");
+					return user2.getName();
+				} else {
+					dataOutputStream.writeUTF("Something went wrong");
+				}
+				
+				
 			break;
 
 			case 2:
 				dataOutputStream.writeUTF("Enter a name: ");
 				String name = dataInputStream.readUTF();
 				dataOutputStream.writeUTF("Enter a password: ");
-				String password = dataInputStream.readUTF();
+				password = dataInputStream.readUTF();
 				dataOutputStream.writeUTF("Enter your email: ");
-				String email = dataInputStream.readUTF();
+				email = dataInputStream.readUTF();
 				User user = new User(socket.getInetAddress().toString(), name, password, email);
 				registeredUsers.add(user);
-				System.out.println("User " + name  + " added.");
+				dataOutputStream.writeUTF("User " + name  + " added.");
 				return name;
 			
 		default:
@@ -135,12 +149,18 @@ public class Server {
 		
 		
 		return null;
-		
 	
-		
-		
-		
 	}
+	
+	private User findUserToLogIn(String email, String password) {
+		for (User user : registeredUsers) {
+			System.out.println(user.toString());
+			if (user.getEmail().equals(email) && user.getPassword().equals(password)) {
+				return user;
+			}
+		}
+		return null;
+		}
 	
 	
 	
