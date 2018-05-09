@@ -1,11 +1,13 @@
 package com.seeburger.networking;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
@@ -85,6 +87,7 @@ public class Server {
 				if (socket.isConnected()) {
 					sockets.add(socket);
 					String name = logInOrRegister(socket);
+					saveUsers();
 					
 					RunnableClass runnableClass = new RunnableClass(port, socket, serverSocket, this.sockets, name);
 					service.execute(runnableClass);
@@ -100,6 +103,18 @@ public class Server {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	
+	private void saveUsers() throws IOException {
+		try(BufferedWriter writer = new BufferedWriter(new FileWriter("registeredUsers.txt"))) {
+			for (int i = 0; i < registeredUsers.size(); i++)
+			{
+				writer.write(registeredUsers.get(i).toString());
+				writer.newLine();
+				
+			}
 		}
 	}
 	
