@@ -18,6 +18,10 @@ public class User implements Serializable
 		this.ipAddress = ipAddress;
 	}
 
+	
+	public String getIP() {
+		return ipAddress;
+	}
 
 	public String getName()
 	{
@@ -45,7 +49,7 @@ public class User implements Serializable
 	@Override
 	public String toString()
 	{
-		return this.ipAddress + ": Name: " + this.name + " Password: " + this.password + " Email: " + this.email;
+		return this.ipAddress + "," + this.name + "," + this.password + "," + this.email;
 	}
 
 
