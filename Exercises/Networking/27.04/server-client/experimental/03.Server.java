@@ -25,6 +25,7 @@ public class Server {
 	private ArrayList<String> ipAddresses;
 	private ArrayList<Socket> sockets;
 	private static ArrayList<User> registeredUsers = new ArrayList<>();
+	private User user;
 	
 	static {
 		File file = new File("registeredUsers.txt");
@@ -86,10 +87,10 @@ public class Server {
 				Socket socket = serverSocket.accept();
 				if (socket.isConnected()) {
 					sockets.add(socket);
-					String name = logInOrRegister(socket);
+					logInOrRegister(socket);
 					saveUsers();
 					
-					RunnableClass runnableClass = new RunnableClass(port, socket, serverSocket, this.sockets, name);
+					RunnableClass runnableClass = new RunnableClass(port, socket, serverSocket, this.sockets, this.user.getName());
 					service.execute(runnableClass);
 					if (!ipAddresses.contains(socket.getInetAddress().toString())) {
 						ipAddresses.add(socket.getInetAddress().toString());
@@ -118,13 +119,14 @@ public class Server {
 		}
 	}
 	
-	private String logInOrRegister(Socket socket) throws IOException {
+	private void logInOrRegister(Socket socket) throws IOException {
 		DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());  
 		DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
 		
 		dataOutputStream.writeUTF("Press 1 to log in.\nPress 2 to create a new account.");
 		dataOutputStream.flush();
 		int choice = Integer.parseInt(dataInputStream.readUTF());
+		String name;
 		String email;
 		String password;
 		switch (choice)
@@ -137,17 +139,21 @@ public class Server {
 				User user2 = findUserToLogIn(email, password);
 				if (user2 != null) {
 					dataOutputStream.writeUTF("Login complete.");
-					return user2.getName();
+					this.user = user2;
+					return;
 				} else {
-					dataOutputStream.writeUTF("Something went wrong");
+					dataOutputStream.writeUTF("Wrong username or password. Try again.");
+					logInOrRegister(socket);
+					return;
+					
 				}
 				
 				
-			break;
+		
 
 			case 2:
 				dataOutputStream.writeUTF("Enter a name: ");
-				String name = dataInputStream.readUTF();
+				name = dataInputStream.readUTF();
 				dataOutputStream.writeUTF("Enter a password: ");
 				password = dataInputStream.readUTF();
 				dataOutputStream.writeUTF("Enter your email: ");
@@ -155,21 +161,18 @@ public class Server {
 				User user = new User(socket.getInetAddress().toString(), name, password, email);
 				registeredUsers.add(user);
 				dataOutputStream.writeUTF("User " + name  + " added.");
-				return name;
+				this.user = user;
+				return;
 			
 		default:
 			break;
 		}
-		
-		
-		
-		return null;
 	
 	}
 	
 	private User findUserToLogIn(String email, String password) {
 		for (User user : registeredUsers) {
-			System.out.println(user.toString());
+//			System.out.println(user.toString());
 			if (user.getEmail().equals(email) && user.getPassword().equals(password)) {
 				return user;
 			}
@@ -192,7 +195,7 @@ public class Server {
 		String str="",str2="";  
 		while(!str.equals("stop")){  
 			str=din.readUTF();  
-			System.out.println("client says: "+str);  
+			System.out.println("client says: " + str);  
 			str2 = str;
 //			str2=br.readLine();  
 			dout.writeUTF(str2);  
