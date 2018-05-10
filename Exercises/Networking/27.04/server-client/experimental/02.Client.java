@@ -20,6 +20,7 @@ public class Client {
 	}
 	
 	public void connectToServer(String ipAddress, int port) throws IOException {
+	
 		Socket s = new Socket(ipAddress , port);  
 		DataInputStream din = new DataInputStream(s.getInputStream());  
 		DataOutputStream dout = new DataOutputStream(s.getOutputStream());  
@@ -37,7 +38,8 @@ public class Client {
 			
 //			str2=din.readUTF();  
 //			System.out.println("Server says: "+str2);  
-		}  
+		}
+		System.out.println("Chat stopped from client.");
 		executorService.shutdown();  
 		dout.close();  
 		din.close();
