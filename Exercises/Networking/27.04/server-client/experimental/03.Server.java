@@ -93,6 +93,9 @@ public class Server {
 				if (socket.isConnected()) {
 					sockets.add(socket);
 					logInOrRegister(socket);
+					if (user == null) {
+						continue;
+					}
 					saveUsers();
 					
 					RunnableClass runnableClass = new RunnableClass(port, socket, serverSocket, this.sockets, this.user.getName());
@@ -128,7 +131,7 @@ public class Server {
 		DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());  
 		DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
 		
-		dataOutputStream.writeUTF("Press 1 to log in.\nPress 2 to create a new account.");
+		dataOutputStream.writeUTF("Press 1 to log in.\nPress 2 to create a new account.\nPress 3 to exit.");
 		dataOutputStream.flush();
 		int choice = Integer.parseInt(dataInputStream.readUTF());
 		String name;
@@ -175,9 +178,18 @@ public class Server {
 					return;
 				}
 				
+				
+			case 3:
+				dataOutputStream.writeUTF("exit");
+//				socket.close();
+				break;
+				
 			
 		default:
-			break;
+			dataOutputStream.writeUTF("Wront input. Try again.");
+			logInOrRegister(socket);
+			return;
+			
 		}
 	
 	}
