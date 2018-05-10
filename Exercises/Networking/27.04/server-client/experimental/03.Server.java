@@ -205,55 +205,55 @@ public class Server {
 	
 	
 	
-	public void startServerNew(int port) throws IOException
-	{
-		ServerSocket ss=new ServerSocket(port);  
-		Socket s=ss.accept();  
-		DataInputStream din=new DataInputStream(s.getInputStream());  
-		DataOutputStream dout=new DataOutputStream(s.getOutputStream());  
-		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));  
-		  
-		String str="",str2="";  
-		while(!str.equals("stop")){  
-			str=din.readUTF();  
-			System.out.println("client says: " + str);  
-			str2 = str;
-//			str2=br.readLine();  
-			dout.writeUTF(str2);  
-			dout.flush();  
-		}  
-		din.close();  
-		s.close();  
-		ss.close();  
-	}
-	
-	
-	
-	
-	public void startServer(int port) {
-		try {
-			ServerSocket serverSocket = new ServerSocket(port);
-			String mString = "";
-			
-			while (true) {
-				Socket socket = serverSocket.accept();
-				DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
-				mString = (String)dataInputStream.readUTF();
-				if (mString.equals("stop")) {
-					break;
-				}
-				System.out.println("message= " + mString);
-				
-				
-			}
-			serverSocket.close(); //test
-			
-			
-			
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+//	public void startServerNew(int port) throws IOException
+//	{
+//		ServerSocket ss=new ServerSocket(port);  
+//		Socket s=ss.accept();  
+//		DataInputStream din=new DataInputStream(s.getInputStream());  
+//		DataOutputStream dout=new DataOutputStream(s.getOutputStream());  
+//		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));  
+//		  
+//		String str="",str2="";  
+//		while(!str.equals("stop")){  
+//			str=din.readUTF();  
+//			System.out.println("client says: " + str);  
+//			str2 = str;
+////			str2=br.readLine();  
+//			dout.writeUTF(str2);  
+//			dout.flush();  
+//		}  
+//		din.close();  
+//		s.close();  
+//		ss.close();  
+//	}
+//	
+//	
+//	
+//	
+//	public void startServer(int port) {
+//		try {
+//			ServerSocket serverSocket = new ServerSocket(port);
+//			String mString = "";
+//			
+//			while (true) {
+//				Socket socket = serverSocket.accept();
+//				DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+//				mString = (String)dataInputStream.readUTF();
+//				if (mString.equals("stop")) {
+//					break;
+//				}
+//				System.out.println("message= " + mString);
+//				
+//				
+//			}
+//			serverSocket.close(); //test
+//			
+//			
+//			
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
 
-	}
+//	}
 
 }
