@@ -30,12 +30,12 @@ public class RunnableClass implements Runnable {
 
 	@Override
 	public void run() {
-		startServer(this.socket, this.serverSocket);
+		startServerThread(this.socket, this.serverSocket);
 		
 	}
 	
 	
-	public void startServer(Socket socket, ServerSocket ss) {
+	public void startServerThread(Socket socket, ServerSocket ss) {
 		try {
 			
 //			ServerSocket ss=new ServerSocket(port);  
@@ -47,60 +47,30 @@ public class RunnableClass implements Runnable {
 			String str="";  
 			while(!str.equals("stop")){  
 				str=din.readUTF();  
-				System.out.println(socket.getInetAddress() + " : " + str);  
-//				str2 = str;
-//				str2=br.readLine();  
-//				dout.writeUTF(str2);  
-//				dout.flush();  
+				System.out.println(socket.getInetAddress() + " " + name + " : " + str);  
+				
 				for (int i = 0; i < sockets.size(); i++) {
-					DataOutputStream dout2 = new DataOutputStream(sockets.get(i).getOutputStream());
-					dout2.writeUTF(socket.getInetAddress() + ": " + name + ": " + str);
-					dout2.flush();
+					if (sockets.get(i).isClosed()) {
+						sockets.remove(i);
+						i--;
+//						System.out.println("trying to send message " + str);
+					} else {
+						dout = new DataOutputStream(sockets.get(i).getOutputStream());
+						dout.writeUTF(socket.getInetAddress() + ": " + name + ": " + str);
+						dout.flush();
+						
+					}
 					
 				}
+				
 			}  
 			
+			dout.close();
 			din.close();  
-			socket.close();  
-			ss.close();  
-			
-//			String mString = "";
-//			String string2 = "";
-//			
-//			DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
-//			DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-//			mString = (String)dataInputStream.readUTF();
-//			
-//			string2 = mString;
-//			dataOutputStream.writeUTF(mString);
-//			dataOutputStream.flush();
-////			if (mString.equals("stop")) {
-////				break;
-////			}
-//			System.out.println(socket.getInetAddress().toString() + ": " + Thread.currentThread().getName() + "message= " +  mString);
-//			
-////			DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-////			dataOutputStream.writeUTF(mString);
-////			dataOutputStream.flush();
-////			dataOutputStream.close();
-//			
-//			
-////			ChatWindowWatcher chatWindowWatcher = new ChatWindowWatcher(socket.getInetAddress().toString() + ": " + mString);
-////			executorService.execute(chatWindowWatcher);
-//			
-//			
-//			dataInputStream.close();
-//			while (true) {
-//				
-//				
-//				
-//				
-////				socket = serverSocket.accept();
-//
-//				
-//				
-//			}
-//			System.out.println("broke out of while loop in runnable");
+//			socket.shutdownInput();
+//			socket.shutdownOutput();
+			socket.close();
+//			ss.close();  
 			
 			
 			
