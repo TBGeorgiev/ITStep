@@ -29,7 +29,7 @@ public class Client {
 		executorService.execute(runnableForClient);
 		  
 		String str="",str2="";  
-		while(!str.equals("stop")){  
+		while(!str.equals("exit")){  
 			str=br.readLine();  
 			dout.writeUTF(str);  
 			dout.flush();
