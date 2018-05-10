@@ -28,7 +28,15 @@ public class Server {
 	private User user;
 	
 	static {
-
+		File users = new File("registeredUsers.txt");
+		try
+		{
+			users.createNewFile();
+		} catch (IOException e1)
+		{
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		try(BufferedReader reader = new BufferedReader(new FileReader("registeredUsers.txt"))) {
 			
 			while (true)
@@ -155,16 +163,32 @@ public class Server {
 				password = dataInputStream.readUTF();
 				dataOutputStream.writeUTF("Enter your email: ");
 				email = dataInputStream.readUTF();
-				User user = new User(socket.getInetAddress().toString(), name, password, email);
-				registeredUsers.add(user);
-				dataOutputStream.writeUTF("User " + name  + " added.");
-				this.user = user;
-				return;
+				if (checkForDuplicate(name, email) == null) {
+					User user = new User(socket.getInetAddress().toString(), name, password, email);					
+					registeredUsers.add(user);
+					dataOutputStream.writeUTF("User " + name  + " added.");
+					this.user = user;
+					return;
+				} else {
+					dataOutputStream.writeUTF("User already exists. Try again.");
+					logInOrRegister(socket);
+					return;
+				}
+				
 			
 		default:
 			break;
 		}
 	
+	}
+	
+	private User checkForDuplicate(String name, String email) {
+		for (User user : registeredUsers) {
+			if (user.getName().equals(name) && user.getEmail().equals(email)) {
+				return user;
+			}
+		}
+		return null;
 	}
 	
 	private User findUserToLogIn(String email, String password) {
