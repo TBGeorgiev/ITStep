@@ -20,18 +20,24 @@ public class RunnableForClient implements Runnable {
 		
 		while (true) {
 			try {
+				
 				string = dataInputStream.readUTF();
-				if (string != null) {
+				if (string != null && string.equals("exit")) {
+//					socket.close();
+//					dataInputStream.close();
+					break;
+				}
+				else if (string != null) {
 					System.out.println(string);
 					string = null;
-					Thread.currentThread().sleep(100);
 					
 				}
 //				if (string.length() > 0) {
 //					string = "";
 //				}
-			} catch (IOException | InterruptedException e) {
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
+				System.out.println("IOFException inside RunnableClient");
 				e.printStackTrace();
 				break;
 			}
