@@ -23,6 +23,16 @@ public class RunnableForClient implements Runnable {
 				
 				string = dataInputStream.readUTF();
 				if (string != null && string.equals("exit")) {
+					System.out.println("Closing chat.");
+					try
+					{
+						Thread.currentThread().sleep(500);
+					} catch (InterruptedException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					System.exit(0);
 //					socket.close();
 //					dataInputStream.close();
 					break;
