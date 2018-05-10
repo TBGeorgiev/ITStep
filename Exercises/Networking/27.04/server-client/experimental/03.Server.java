@@ -28,10 +28,7 @@ public class Server {
 	private User user;
 	
 	static {
-		File file = new File("registeredUsers.txt");
-		if (!file.exists()) {
-			file.mkdir();
-		}
+
 		try(BufferedReader reader = new BufferedReader(new FileReader("registeredUsers.txt"))) {
 			
 			while (true)
