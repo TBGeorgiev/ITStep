@@ -3,10 +3,12 @@ package com.seeburger.networking;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -16,13 +18,16 @@ public class RunnableClass implements Runnable {
 	private String name;
 	
 	private ArrayList<Socket> sockets;
+	private LinkedHashMap<String, Socket> mapWithConnectedUsers;
+
 	
 	
-	public RunnableClass(int port, Socket socket, ServerSocket serverSocket, ArrayList<Socket> sockets, String name) {
+	public RunnableClass(int port, Socket socket, ServerSocket serverSocket, ArrayList<Socket> sockets, String name, LinkedHashMap<String, Socket> mapWithConnectedUsers) {
 		this.name = name;
 		this.socket = socket;
 		this.serverSocket = serverSocket;
 		this.sockets = sockets;
+		this.mapWithConnectedUsers = mapWithConnectedUsers;
 	}
 
 	@Override
@@ -68,6 +73,11 @@ public class RunnableClass implements Runnable {
 				if (str.equals("exit")) {
 					toSend = name + " has left the chat room.";
 					quit = true;
+				}
+				else if (str.equals("/admin") && name.equals("admin")) {
+					showAdminCommands(socket);
+					
+					
 				} else {
 					toSend = socket.getInetAddress() + ": " + name + ": " + str;
 				}
@@ -106,6 +116,62 @@ public class RunnableClass implements Runnable {
 		
 		
 		
+		
+		
+		
+	}
+	
+	private void notifyAllUsers(DataOutputStream dout, String message) throws IOException {
+		for (int i = 0; i < sockets.size(); i++) {
+			if (sockets.get(i).isClosed()) {
+				sockets.remove(i);
+				i--;
+			} else {
+				dout = new DataOutputStream(sockets.get(i).getOutputStream());
+//				dout.writeUTF(socket.getInetAddress() + ": " + name + ": " + str);
+				dout.writeUTF(message);
+				dout.flush();
+				
+			}
+			
+		}
+	}
+	
+	private void showAdminCommands(Socket socket) throws NumberFormatException, IOException {
+		DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+		DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+		
+		dataOutputStream.writeUTF("Available commands: \n1:List all users.\n2.Kick user.\n3.Exit menu.");
+		
+		int choice = Integer.parseInt(dataInputStream.readUTF());
+		switch (choice)
+		{
+		case 1:
+			for (String name : mapWithConnectedUsers.keySet()) {
+				dataOutputStream.writeUTF(name);
+			}
+			showAdminCommands(socket);
+			return;
+		
+		case 2:
+			dataOutputStream.writeUTF("Which user do you want to kick?");
+			String userToKick = dataInputStream.readUTF();
+			kickUser(userToKick);
+			notifyAllUsers(dataOutputStream, "User " + userToKick + " has been kicked.");
+			break;
+
+		default:
+			break;
+		}
+		
+	}
+	
+	private void kickUser(String name) throws IOException {
+		DataOutputStream dataOutputStream = new DataOutputStream(mapWithConnectedUsers.get(name).getOutputStream());
+		dataOutputStream.writeUTF("exit");
+		dataOutputStream.flush();
+		mapWithConnectedUsers.get(name).close();
+		mapWithConnectedUsers.remove(name);
 	}
 	
 	
