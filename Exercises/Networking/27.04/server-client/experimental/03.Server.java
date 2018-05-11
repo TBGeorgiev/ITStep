@@ -71,11 +71,6 @@ public class Server {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-//		for (int i = 0; i < registeredUsers.size(); i++)
-//		{
-//			System.out.println(registeredUsers.get(i).toString());
-//		}
 	}
 	
 	
@@ -109,9 +104,7 @@ public class Server {
 						
 					}
 					
-//					System.out.println("Socket is connected multithread");
 				}
-//				Thread.currentThread().sleep(1000);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -130,9 +123,6 @@ public class Server {
 			}
 		}
 	}
-	
-	
-	
 	
 	
 	private void logInOrRegister(Socket socket) throws IOException {
@@ -163,9 +153,6 @@ public class Server {
 					return;
 					
 				}
-				
-				
-		
 
 			case 2:
 				dataOutputStream.writeUTF("Enter a name: ");
@@ -220,60 +207,5 @@ public class Server {
 		}
 		return null;
 		}
-	
-	
-	
-	
-	
-//	public void startServerNew(int port) throws IOException
-//	{
-//		ServerSocket ss=new ServerSocket(port);  
-//		Socket s=ss.accept();  
-//		DataInputStream din=new DataInputStream(s.getInputStream());  
-//		DataOutputStream dout=new DataOutputStream(s.getOutputStream());  
-//		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));  
-//		  
-//		String str="",str2="";  
-//		while(!str.equals("stop")){  
-//			str=din.readUTF();  
-//			System.out.println("client says: " + str);  
-//			str2 = str;
-////			str2=br.readLine();  
-//			dout.writeUTF(str2);  
-//			dout.flush();  
-//		}  
-//		din.close();  
-//		s.close();  
-//		ss.close();  
-//	}
-//	
-//	
-//	
-//	
-//	public void startServer(int port) {
-//		try {
-//			ServerSocket serverSocket = new ServerSocket(port);
-//			String mString = "";
-//			
-//			while (true) {
-//				Socket socket = serverSocket.accept();
-//				DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
-//				mString = (String)dataInputStream.readUTF();
-//				if (mString.equals("stop")) {
-//					break;
-//				}
-//				System.out.println("message= " + mString);
-//				
-//				
-//			}
-//			serverSocket.close(); //test
-//			
-//			
-//			
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//		}
-
-//	}
 
 }
