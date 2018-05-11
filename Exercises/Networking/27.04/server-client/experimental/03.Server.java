@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -24,6 +25,7 @@ public class Server {
 	private ExecutorService service = Executors.newFixedThreadPool(100);
 	private ArrayList<String> ipAddresses;
 	private ArrayList<Socket> sockets;
+	private LinkedHashMap<String, Socket> mapOfConnectedUsers;
 	private static ArrayList<User> registeredUsers = new ArrayList<>();
 	private User user;
 	
@@ -80,6 +82,7 @@ public class Server {
 	public Server() {
 		this.ipAddresses = new ArrayList<String>();
 		this.sockets = new ArrayList();
+		this.mapOfConnectedUsers = new LinkedHashMap<>();
 		
 	}
 	
@@ -96,9 +99,10 @@ public class Server {
 					if (user == null) {
 						continue;
 					}
+					mapOfConnectedUsers.putIfAbsent(this.user.getName(), socket);
 					saveUsers();
 					
-					RunnableClass runnableClass = new RunnableClass(port, socket, serverSocket, this.sockets, this.user.getName());
+					RunnableClass runnableClass = new RunnableClass(port, socket, serverSocket, this.sockets, this.user.getName(), mapOfConnectedUsers);
 					service.execute(runnableClass);
 					if (!ipAddresses.contains(socket.getInetAddress().toString())) {
 						ipAddresses.add(socket.getInetAddress().toString());
@@ -126,6 +130,10 @@ public class Server {
 			}
 		}
 	}
+	
+	
+	
+	
 	
 	private void logInOrRegister(Socket socket) throws IOException {
 		DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());  
