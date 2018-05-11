@@ -38,35 +38,18 @@ public class RunnableClass implements Runnable {
 	
 	
 	public void startServerThread(Socket socket, ServerSocket ss) {
-		try {
-			
-			
-			
-//			ServerSocket ss=new ServerSocket(port);  
-//			Socket s=ss.accept();  
+		try { 
 			DataInputStream din = new DataInputStream(socket.getInputStream());  
 			DataOutputStream dout = new DataOutputStream(socket.getOutputStream());  
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));  
 			String joined = name + " has joined the chat.";
 			System.out.println(joined);
-			for (int i = 0; i < sockets.size(); i++) {
-				if (sockets.get(i).isClosed()) {
-					sockets.remove(i);
-					i--;
-				} else {
-					dout = new DataOutputStream(sockets.get(i).getOutputStream());
-//					dout.writeUTF(socket.getInetAddress() + ": " + name + ": " + str);
-					dout.writeUTF(joined);
-					dout.flush();
-					
-				}
-			}
+			notifyAllUsers(dout, joined);
 			  
 			String str = ""; 
 			
 			boolean quit = false;
-			
-//			while(!(str = din.readUTF()).equals("exit")){  
+		
 			while (!quit) {
 				str = din.readUTF();
 				String toSend = "";
@@ -82,7 +65,6 @@ public class RunnableClass implements Runnable {
 					toSend = socket.getInetAddress() + ": " + name + ": " + str;
 				}
 				System.out.println(toSend);
-//				System.out.println(socket.getInetAddress() + " " + name + " : " + str);  
 				
 				for (int i = 0; i < sockets.size(); i++) {
 					if (sockets.get(i).isClosed()) {
@@ -90,7 +72,6 @@ public class RunnableClass implements Runnable {
 						i--;
 					} else {
 						dout = new DataOutputStream(sockets.get(i).getOutputStream());
-//						dout.writeUTF(socket.getInetAddress() + ": " + name + ": " + str);
 						dout.writeUTF(toSend);
 						dout.flush();
 						
@@ -98,16 +79,10 @@ public class RunnableClass implements Runnable {
 					
 				}
 				
-			}
-//			System.out.println(name + " has left the chat room.");
-			
+			}	
 			dout.close();
 			din.close();  
-//			socket.shutdownInput();
-//			socket.shutdownOutput();
 			socket.close();
-//			ss.close();  
-			
 			
 			
 		} catch (Exception e) {
