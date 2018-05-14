@@ -12,6 +12,8 @@ import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.xml.bind.DataBindingException;
+
 public class RunnableClass implements Runnable
 {
 	private Socket socket;
@@ -20,6 +22,10 @@ public class RunnableClass implements Runnable
 
 	private ArrayList<Socket> sockets;
 	private LinkedHashMap<String, Socket> mapWithConnectedUsers;
+	
+//	private ExecutorService executorService = Executors.newFixedThreadPool(100);
+	private BufferedReader reader;
+	
 
 	public RunnableClass(int port, Socket socket, ServerSocket serverSocket, ArrayList<Socket> sockets, String name,
 			LinkedHashMap<String, Socket> mapWithConnectedUsers)
@@ -62,6 +68,9 @@ public class RunnableClass implements Runnable
 				} else if (str.equals("/admin") && name.equals("admin"))
 				{
 					showAdminCommands(socket);
+				} else if (str.equals("/w")) {
+
+					privateChat(socket);
 				} else
 				{
 					toSend = socket.getInetAddress() + ": " + name + ": " + str;
@@ -107,6 +116,34 @@ public class RunnableClass implements Runnable
 			}
 		}
 	}
+	
+	
+	private void privateChat(Socket socket) throws IOException {
+		
+		DataOutputStream dataOutputStream1 = new DataOutputStream(socket.getOutputStream());
+		DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+		reader = new BufferedReader(new InputStreamReader(System.in));
+		dataOutputStream1.writeUTF("Enter the user name: ");
+		String user = dataInputStream.readUTF();
+		
+		DataOutputStream dataOutputStream = new DataOutputStream(mapWithConnectedUsers.get(user).getOutputStream());
+		
+		dataOutputStream1.writeUTF("Write your PM's: ");
+		
+		String toSend = "";
+		while (!(toSend = dataInputStream.readUTF()).equals("global"))
+		{
+			dataOutputStream.writeUTF(toSend);
+			dataOutputStream.flush();
+			
+//			dataOutputStream1.writeUTF("Private message sent");
+//			dataOutputStream1.flush();
+			
+		}
+		
+		
+		
+	}
 
 	private void showAdminCommands(Socket socket) throws NumberFormatException, IOException
 	{
@@ -129,6 +166,11 @@ public class RunnableClass implements Runnable
 		case 2:
 			dataOutputStream.writeUTF("Which user do you want to kick?");
 			String userToKick = dataInputStream.readUTF();
+			if (userToKick.equals("admin")) {
+				dataOutputStream.writeUTF("Are you trying to kick yourself u idiot?");
+				showAdminCommands(socket);
+				return;
+			}
 			kickUser(userToKick);
 			notifyAllUsers(dataOutputStream, "User " + userToKick + " has been kicked.");
 			break;
