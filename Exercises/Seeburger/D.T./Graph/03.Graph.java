@@ -1,7 +1,8 @@
-package com.seeburger.graph2;
+package com.seeburger.graph;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 public class Graph {
 
@@ -26,8 +27,18 @@ public class Graph {
 	public boolean hasPathDFS(int source, int destination) {
 		Node sNode = getNode(source);
 		Node dNode = getNode(destination);
-		HashSet<Integer> visited = new HashSet<Integer>();
-		return hasPathDFS(sNode, dNode, visited);
+		LinkedHashSet<Integer> visited = new LinkedHashSet<Integer>();
+		if (hasPathDFS(sNode, dNode, visited)) {
+			Object[] intArray = visited.toArray();
+			for (int i = 0; i < intArray.length; i++)
+			{
+				System.out.print(intArray[i] + " ");
+			}
+			System.out.println();
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private boolean hasPathDFS(Node sNode, Node dNode, HashSet<Integer> visited) {
