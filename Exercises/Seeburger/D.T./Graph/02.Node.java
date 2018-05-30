@@ -1,13 +1,13 @@
-package com.seeburger.graph2;
-
+package com.seeburger.graph;
 import java.util.LinkedList;
 
 public class Node {
-	private int id;
+//	private int id;
+	private String id;
 	private LinkedList<Node> adjacent = new LinkedList<Node>();
 	
 	
-	public int getId() {
+	public String getId() {
 		return this.id;
 	}
 	
@@ -15,7 +15,7 @@ public class Node {
 		return this.adjacent;
 	}
 
-	public Node(int id) {
+	public Node(String id) {
 		this.id = id;
 	}
 	
