@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cities>
+	<city id="Sofia">
+		<connection1>Plovdiv</connection1>
+		<connection2>Pleven</connection2>
+		<connection3>Blagoevgrad</connection3>
+	</city>
+	<city id="Plovdiv">
+		<connection1>Stara Zagora</connection1>
+		<connection2>Smolian</connection2>
+	</city>
+	<city id="Stara Zagora">
+		<connection1>Pleven</connection1>
+		<connection2>Burgas</connection2>
+	</city>
+	<city id="Smolian">
+		<connection1>Blagoevgrad</connection1>
+		<connection2>Kurdzhali</connection2>
+	</city>
+	<city id="Kurdzhali">
+		<connection1>Stara Zagora</connection1>
+		<connection2>Burgas</connection2>
+	</city>
+</cities>
