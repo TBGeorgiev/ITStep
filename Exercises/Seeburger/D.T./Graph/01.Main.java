@@ -54,6 +54,7 @@ public class Main {
 				for (int j = 0; j < adjacent.getLength(); j++) {
 					String adjacentCity = adjacent.item(j).getTextContent();
 					if (adjacentCity.matches("[a-zA-z]+")) {
+						graph.addEdge(currentCity, adjacentCity);
 						System.out.println("\t" + adjacentCity);						
 					}
 //					System.out.println(
@@ -72,21 +73,25 @@ public class Main {
 			e.printStackTrace();
 		}
 
-		HashMap<String, Node> nodes = graph.getNodes();
-
-		for (Map.Entry<String, Node> map : nodes.entrySet()) {
-			System.out.println("Parent:");
-			System.out.println(map.getKey());
-			System.out.println("Children:");
-			for (int i = 0; i < map.getValue().getAdjacent().size(); i++) {
-				System.out.println(map.getValue().getAdjacent().get(i).getId());
-			}
-		}
+//		HashMap<String, Node> nodes = graph.getNodes();
+//
+//		for (Map.Entry<String, Node> map : nodes.entrySet()) {
+//			System.out.println("Parent:");
+//			System.out.println(map.getKey());
+//			System.out.println("Children:");
+//			for (int i = 0; i < map.getValue().getAdjacent().size(); i++) {
+//				System.out.println(map.getValue().getAdjacent().get(i).getId());
+//			}
+//		}
 
 		System.out.println();
 
-		// System.out.println(graph.hasPathDFS("Pleven", "Blagoevgrad"));
-		// graph.bredthFirstSearch("Pleven", "Blagoevgrad");
+		
+		 System.out.println(graph.hasPathDFS("Pleven", "Blagoevgrad"));
+		 
+		 System.out.println();
+		 
+		 graph.bredthFirstSearch("Pleven", "Blagoevgrad");
 
 	}
 
