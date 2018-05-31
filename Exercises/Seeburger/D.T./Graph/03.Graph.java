@@ -1,4 +1,4 @@
-package com.seeburger.graph;
+package com.seeburger.graph2;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,7 +10,7 @@ import java.util.Queue;
 public class Graph {
 
 	private HashMap<String, Node> nodeLookup = new HashMap<String, Node>();
-	
+
 	public HashMap<String, Node> getNodes() {
 		return this.nodeLookup;
 	}
@@ -27,21 +27,21 @@ public class Graph {
 		dNode.addAdjacentToNode(sNode);
 		sNode.addAdjacentToNode(dNode);
 	}
-	
+
 	public void bredthFirstSearch(String source, String destination) {
 		LinkedHashSet<String> visited = new LinkedHashSet<String>();
-		
+
 		Queue<String> queue = new LinkedList<String>();
 		visited.add(source);
 		queue.add(source);
-		
+
 		while (queue.size() != 0) {
 			source = queue.poll();
-			System.out.println(source + " ");
+			System.out.print(source + " ");
 			if (source == destination) {
 				break;
 			}
-			
+
 			Iterator<Node> iterator = nodeLookup.get(source).getAdjacent().listIterator();
 			while (iterator.hasNext()) {
 				String nString = iterator.next().getId();
@@ -49,8 +49,8 @@ public class Graph {
 					visited.add(nString);
 					queue.add(nString);
 				}
-			}		
-		}		
+			}
+		}
 	}
 
 	public boolean hasPathDFS(String source, String destination) {
@@ -59,8 +59,7 @@ public class Graph {
 		LinkedHashSet<String> visited = new LinkedHashSet<String>();
 		if (hasPathDFS(sNode, dNode, visited)) {
 			Object[] intArray = visited.toArray();
-			for (int i = 0; i < intArray.length; i++)
-			{
+			for (int i = 0; i < intArray.length; i++) {
 				System.out.print(intArray[i] + " ");
 			}
 			System.out.println();
