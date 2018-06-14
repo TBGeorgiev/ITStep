@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.concurrent.ExecutorService;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -39,11 +40,12 @@ public class RunnableClass implements Runnable {
 		if (!dest.exists()) {
 			dest.mkdir();
 		}
+		long current = System.currentTimeMillis();
 		for (File file : files) {
 			if (!file.isDirectory()) {
 				try {
 					copyFileUsingStream(file, dest);
-					Files.delete(Paths.get(file.getAbsolutePath()));
+					Files.delete(Paths.get(file.getAbsolutePath()));	
 					if (toStop) {
 						System.out.println("Operation stopped.");
 						return;
@@ -54,7 +56,9 @@ public class RunnableClass implements Runnable {
 				}
 			}
 		}
-		System.out.println("Moving complete." + Thread.currentThread().getName());
+		long end = System.currentTimeMillis();	
+		System.out.println("Moving complete. Operation took: " + (end - current) + " miliseconds. " + Thread.currentThread().getName());
+		System.out.println("Enter 'y' if you want to continue or 'end' if you want to exit.");
 	}
 
 	private void copyFileUsingStream(File source, File dest) throws IOException {
@@ -64,7 +68,7 @@ public class RunnableClass implements Runnable {
 		try {
 			iStream = new FileInputStream(source);
 			oStream = new FileOutputStream(dest + File.separator + source.getName());
-			byte[] buffer = new byte[512];
+			byte[] buffer = new byte[8192];
 			int length;
 			while ((length = iStream.read(buffer)) > 0) {
 				oStream.write(buffer, 0, length);
@@ -76,4 +80,3 @@ public class RunnableClass implements Runnable {
 		}
 	}
 }
-
