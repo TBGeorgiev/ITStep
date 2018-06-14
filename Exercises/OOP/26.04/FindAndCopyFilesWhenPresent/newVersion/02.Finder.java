@@ -65,6 +65,7 @@ public class Finder {
 		emptyFolder = false;
 		RunnableClass runnableClass = new RunnableClass(location, destination, logger);
 		executorService.execute(runnableClass);
+		System.out.println("Moving file/s..");
 		continueOperations(runnableClass);
 	}
 
