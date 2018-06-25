@@ -19,8 +19,6 @@ public class FlyWeightTest extends JFrame{
 	int windowWidth = 1750;
 	int windowHeight = 1000;
 	
-	// A new rectangle is created only if a new color is needed
-	
 	Color[] shapeColor = {Color.orange, Color.red, Color.yellow,
 			Color.blue, Color.pink, Color.cyan, Color.magenta,
 			Color.black, Color.gray};
@@ -62,10 +60,7 @@ public class FlyWeightTest extends JFrame{
 	            
 	            
 	            for(int i=0; i < 100000; ++i) {
-	            	
-	            	// 
-	            	// Uses rectangles stored in the HashMap to
-	            	// speed up the program
+	            	// Uses rectangles stored in the HashMap
 	            	
 	            	MyRect rect = RectFactory.getRect(getRandColor());
 	                rect.draw(g, getRandX(), getRandY(), 
