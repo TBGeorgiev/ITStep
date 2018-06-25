@@ -1,11 +1,5 @@
 package com.seeburger.flyweight;
 
-//The Flyweight design pattern is used when you need to
-//create a large number of similar objects
-
-//To reduce memory this pattern shares Objects that are 
-//the same rather than creating new ones
-
 import javax.swing.*;
 
 import java.awt.BorderLayout;
