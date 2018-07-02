@@ -2,12 +2,9 @@ package com.seeburger.fileTransferAutomation;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.security.MessageDigest;
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
@@ -79,7 +76,7 @@ public class Finder
 		}
 		emptyFolder = false;
 		RunnableClass runnableClass = new RunnableClass(location, destination, logger);
-		LinkedList<String> fileByteStrings = getFileBytes(files);
+		LinkedHashMap<String, String> fileByteStrings = getFileBytes(files);
 		ConsistencyChecker consistencyChecker = new ConsistencyChecker(finalDestinationString, runnableClass,
 				fileByteStrings);
 		System.out.println("Moving file/s..");
@@ -127,45 +124,14 @@ public class Finder
 		return false;
 	}
 
-	private byte[] createChecksum(String filename) throws Exception
+	private LinkedHashMap<String, String> getFileBytes(File[] files)
 	{
-		InputStream fis = new FileInputStream(filename);
-
-		byte[] buffer = new byte[1024];
-		MessageDigest complete = MessageDigest.getInstance("MD5");
-		int numRead;
-
-		do
-		{
-			numRead = fis.read(buffer);
-			if (numRead > 0)
-			{
-				complete.update(buffer, 0, numRead);
-			}
-		} while (numRead != -1);
-
-		fis.close();
-		return complete.digest();
-	}
-
-	private LinkedList<String> getFileBytes(File[] files)
-	{
-		LinkedList<String> fileBytesArrayList = new LinkedList();
+		LinkedHashMap<String, String> fileBytesArrayList = new LinkedHashMap<String, String>();
 		for (File file1 : files)
 		{
-			String result = "";
-			byte[] b1;
-			try
-			{
-				b1 = createChecksum(file1.getAbsolutePath());
-				for (int j = 0; j < b1.length; j++)
-				{
-					result += Integer.toString((b1[j] & 0xff) + 0x100, 16).substring(1);
-				}
-				fileBytesArrayList.add(result);
-			} catch (Exception e)
-			{
-				e.printStackTrace();
+			if (!file1.isDirectory()) {		
+				String result = ChecksumUtilities.getMD5(file1);
+				fileBytesArrayList.put(file1.getName(), result);
 			}
 		}
 		return fileBytesArrayList;
