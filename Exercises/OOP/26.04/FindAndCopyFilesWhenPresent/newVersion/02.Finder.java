@@ -10,6 +10,14 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+/**
+ * Performs various checks about 
+ * the files and the location before starting
+ * a new thread from the pool to initiate
+ * the file moving and/or tests depending on
+ * the boolean statements in the main initialization.
+ */
+
 public class Finder
 {
 	private ExecutorService executorService;
@@ -43,7 +51,7 @@ public class Finder
 		}
 	}
 
-	// Starts main transfer method
+	//starts the main transfer method
 	public void transferFiles() throws IOException, InterruptedException
 	{
 		System.out.println(DIRECTORY_TO_SEARCH);
@@ -54,10 +62,11 @@ public class Finder
 		lookForFiles(directory, destination);
 	}
 
-	// Performs checks and starts a file moving thread if files are present
+	//performs checks and starts a file moving thread if files are present
 	public void lookForFiles(String location, String destination) throws InterruptedException, IOException
 	{
 		File folder = new File(location);
+		//checks if location exists
 		if (!folder.exists())
 		{
 			System.out.println("Directory doesn't exist! Try again with a new directory:");
@@ -66,6 +75,9 @@ public class Finder
 			return;
 		}
 		File[] files = folder.listFiles();
+		//if no files are present in the directory
+		//it prints to the console once and checks
+		//for new files every 100 ms
 		if (!filesPresent(files))
 		{
 			if (!emptyFolder)
@@ -78,8 +90,12 @@ public class Finder
 			lookForFiles(location, destination);
 			return;
 		}
+		//when files are present it resumes here
 		emptyFolder = false;
+		//initiates file mover thread
 		RunnableClass runnableClass = new RunnableClass(location, destination, logger);
+		
+		//starts MD5 checksum test if enabled
 		if (fileIntegrityTest)
 		{
 			LinkedHashMap<String, String> fileByteStrings = getFileBytes(files);
@@ -87,6 +103,8 @@ public class Finder
 					fileByteStrings);
 			executorService.execute(consistencyChecker);
 		}
+		
+		//starts location and destination test if enabled
 		if (locationAndDestinationTest)
 		{
 			int numberOfFiles = numberOfFilesInLocation(location);
@@ -95,11 +113,17 @@ public class Finder
 			executorService.execute(destChecker);
 		}
 		System.out.println("Moving file/s..");
+		//starts file mover thread
 		executorService.execute(runnableClass);
 		continueOperations(runnableClass);
 	}
 
-	// Main thread waits for user input to start a new operation or end
+	//main thread asks the user if he wants to start a new
+	//file moving thread while the other one is still moving a file/s
+    //or if he wants to stop the current operation
+	//if the user decides to stop (by typing 'end') - the program
+	//will stop after the moving of the current file is finished
+	//to prevent file corruption
 	private void continueOperations(RunnableClass runnableClass) throws IOException, InterruptedException
 	{
 		System.out.println("Enter 'end' to terminate the operation or enter 'y' to look for other files.");
