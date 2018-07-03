@@ -1,4 +1,4 @@
-package com.seeburger.fileTransferAutomation;
+package com.seeburger.files;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,10 +20,15 @@ public class Finder
 	private Logger logger = Logger.getLogger("FileLog");
 	private FileHandler fHandler;
 	private String finalDestinationString;
+	private boolean fileIntegrityTest;
+	private boolean locationAndDestinationTest;
+	private int numberOfFilesInDirectory = 0;
 
-	public Finder(ExecutorService executorService)
+	public Finder(ExecutorService executorService, boolean fileIntegrityTest, boolean locationAndDestinationTest)
 	{
 		this.executorService = executorService;
+		this.fileIntegrityTest = fileIntegrityTest;
+		this.locationAndDestinationTest = locationAndDestinationTest;
 		try
 		{
 			fHandler = new FileHandler("FileLog.log");
@@ -76,12 +81,22 @@ public class Finder
 		}
 		emptyFolder = false;
 		RunnableClass runnableClass = new RunnableClass(location, destination, logger);
-		LinkedHashMap<String, String> fileByteStrings = getFileBytes(files);
-		ConsistencyChecker consistencyChecker = new ConsistencyChecker(finalDestinationString, runnableClass,
-				fileByteStrings);
+		if (fileIntegrityTest)
+		{
+			LinkedHashMap<String, String> fileByteStrings = getFileBytes(files);
+			ConsistencyChecker consistencyChecker = new ConsistencyChecker(finalDestinationString, runnableClass,
+					fileByteStrings);
+			executorService.execute(consistencyChecker);
+		}
+		if (locationAndDestinationTest)
+		{
+			int numberOfFiles = numberOfFilesInLocation(location);
+			DestinationChecker destChecker = new DestinationChecker(runnableClass, location, destination,
+					numberOfFiles);
+			executorService.execute(destChecker);
+		}
 		System.out.println("Moving file/s..");
 		executorService.execute(runnableClass);
-		executorService.execute(consistencyChecker);
 		continueOperations(runnableClass);
 	}
 
@@ -124,12 +139,26 @@ public class Finder
 		return false;
 	}
 
+	private int numberOfFilesInLocation(String location)
+	{
+		int count = 0;
+		File folder = new File(location);
+		File[] files = folder.listFiles();
+		for (File file : files) {
+			if (!file.isDirectory()) {
+				count++;
+			}
+		}
+		return count;
+	}
+
 	private LinkedHashMap<String, String> getFileBytes(File[] files)
 	{
 		LinkedHashMap<String, String> fileBytesArrayList = new LinkedHashMap<String, String>();
 		for (File file1 : files)
 		{
-			if (!file1.isDirectory()) {		
+			if (!file1.isDirectory())
+			{
 				String result = ChecksumUtilities.getMD5(file1);
 				fileBytesArrayList.put(file1.getName(), result);
 			}
