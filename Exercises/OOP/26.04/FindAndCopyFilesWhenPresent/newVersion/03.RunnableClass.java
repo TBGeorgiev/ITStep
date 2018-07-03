@@ -12,6 +12,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+/**
+ * File mover thread which contains
+ * the file moving methods - Input/Output Stream based
+ */
+
 public class RunnableClass implements Runnable
 {
 	private volatile Object lock = new Object();
