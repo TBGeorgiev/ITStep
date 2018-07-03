@@ -1,4 +1,4 @@
-package com.seeburger.fileTransferAutomation;
+package com.seeburger.files;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 public class RunnableClass implements Runnable
 {
+	private volatile Object lock = new Object();
 	private volatile boolean movingFinished = false;
 	private volatile boolean toStop = false;
 	private String destination;
@@ -32,43 +33,54 @@ public class RunnableClass implements Runnable
 		this.toStop = toStop;
 	}
 
+	
 	@Override
 	public void run()
 	{
-		movingFinished = false;
-		File source = new File(location);
-		File[] files = source.listFiles();
-		File dest = new File(destination);
-		if (!dest.exists())
+		synchronized (lock)
 		{
-			dest.mkdir();
-		}
-		long current = System.currentTimeMillis();
-		for (File file : files)
-		{
-			if (!file.isDirectory())
+			movingFinished = false;
+			File source = new File(location);
+			File[] files = source.listFiles();
+			File dest = new File(destination);
+			if (!dest.exists())
 			{
-				try
+				dest.mkdir();
+			}
+			long current = System.currentTimeMillis();
+			for (File file : files)
+			{
+				if (!file.isDirectory())
 				{
-					copyFileUsingStream(file, dest);
-					Files.delete(Paths.get(file.getAbsolutePath()));
-					if (toStop)
+					try
 					{
-						System.out.println("Operation stopped.");
-						return;
-					}
+						copyFileUsingStream(file, dest);
+						Files.delete(Paths.get(file.getAbsolutePath()));
+						if (toStop)
+						{
+							System.out.println("Operation stopped.");
+							return;
+						}
 
-				} catch (IOException e)
-				{
-					e.printStackTrace();
+					} catch (IOException e)
+					{
+						e.printStackTrace();
+					}
 				}
 			}
+
+			lock.notifyAll();
+			long end = System.currentTimeMillis();
+			movingFinished = true;
+			System.out.println("Moving complete. Operation took: " + (end - current) + " miliseconds. "
+					+ Thread.currentThread().getName());
+			System.out.println("Enter 'y' if you want to continue or 'end' if you want to exit.");
 		}
-		long end = System.currentTimeMillis();
-		movingFinished = true;
-		System.out.println("Moving complete. Operation took: " + (end - current) + " miliseconds. "
-				+ Thread.currentThread().getName());
-		System.out.println("Enter 'y' if you want to continue or 'end' if you want to exit.");
+	}
+
+	public Object getLock()
+	{
+		return lock;
 	}
 
 	private void copyFileUsingStream(File source, File dest) throws IOException
@@ -98,5 +110,4 @@ public class RunnableClass implements Runnable
 	{
 		return movingFinished;
 	}
-
 }
