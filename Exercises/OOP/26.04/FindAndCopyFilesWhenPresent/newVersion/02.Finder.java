@@ -16,13 +16,12 @@ public class Finder
 	private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 	private boolean emptyFolder;
 	private static String DIRECTORY_TO_SEARCH = "Enter a directory to search:";
-	private static String MOVE_DESTINATION = "Enter the destination you want to copy the files to:";
+	private static String MOVE_DESTINATION = "Enter the destination you want to move the files to:";
 	private Logger logger = Logger.getLogger("FileLog");
 	private FileHandler fHandler;
 	private String finalDestinationString;
 	private boolean fileIntegrityTest;
 	private boolean locationAndDestinationTest;
-	private int numberOfFilesInDirectory = 0;
 
 	public Finder(ExecutorService executorService, boolean fileIntegrityTest, boolean locationAndDestinationTest)
 	{
