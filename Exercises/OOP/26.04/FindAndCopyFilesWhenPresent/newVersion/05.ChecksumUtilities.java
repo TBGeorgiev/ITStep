@@ -5,6 +5,11 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.security.MessageDigest;
 
+/**
+ * Utility class which contains methods for MD5 checksum tests
+ * so they can be used multiple times with ease.
+ */
+
 public final class ChecksumUtilities
 {
 	public static byte[] createChecksum(String filename) throws Exception
@@ -27,9 +32,8 @@ public final class ChecksumUtilities
 		fis.close();
 		return complete.digest();
 	}
-
-	public static String getMD5(File fileLocation)
-	{
+	
+	public static String getMD5(File fileLocation) {
 		String result = "";
 		byte[] b1;
 		try
