@@ -2,6 +2,11 @@ package com.seeburger.files;
 
 import java.io.File;
 
+/**
+ * Thread for checking the location/destination
+ * and correct file amount.
+ */
+
 public class DestinationChecker implements Runnable
 {
 
