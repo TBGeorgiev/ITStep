@@ -1,4 +1,4 @@
-package com.seeburger.fileTransferAutomation;
+package com.seeburger.files;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,30 +23,27 @@ public class ConsistencyChecker implements Runnable
 	@Override
 	public void run()
 	{
-		while (!runnableClass.isMovingFinished())
+		synchronized (runnableClass.getLock())
 		{
+			while (!runnableClass.isMovingFinished())
+			{
+				try
+				{
+					runnableClass.getLock().wait();
+				} catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+			}
 			try
 			{
-				Thread.sleep(100);
-			} catch (InterruptedException e)
+				checkFiles(destinationString, bytesList);
+			} catch (Exception e)
 			{
 				e.printStackTrace();
 			}
-		}
-		try
-		{
-			Thread.currentThread().sleep(2000);
-		} catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		}
-		try
-		{
-			checkFiles(destinationString, bytesList);
-		} catch (Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			runnableClass.getLock().notifyAll();
 		}
 	}
 
@@ -65,18 +62,17 @@ public class ConsistencyChecker implements Runnable
 		}
 
 		int index = 0;
-
+		System.out.println("File integrity tests:");
 		for (Map.Entry<String, String> map : bytesList2.entrySet())
 		{
-//			System.out.println(map.getValue() + " : " + sourceByteStrings.get(index));
 			if (map.getValue().equals(sourceByteStrings.get(index)))
 			{
-				System.out.println("Good");
+				System.out.println("\tGood file: " + map.getKey());
 			} else
 			{
-				System.out.println("Bad file " + map.getKey());
+				System.out.println("\tBad file: " + map.getKey());
 			}
-			 index++;
+			index++;
 		}
 	}
 }
