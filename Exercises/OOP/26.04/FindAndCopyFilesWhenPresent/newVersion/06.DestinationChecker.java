@@ -38,17 +38,17 @@ public class DestinationChecker implements Runnable
 			System.out.println("Location and destination tests:");
 			if (isLocationEmpty(this.location))
 			{
-				System.out.println("\tLocation test: Good" + "\n\tNo files present.");
+				System.out.println("\tLocation test: Good" + " - No files present.");
 			} else
 			{
-				System.out.println("\tLocation test: Bad" + "\n\tFiles still present in location: " + this.location);
+				System.out.println("\tLocation test: Bad" + " - Files still present in location: " + this.location);
 			}
 			if (destinationTest(this.destination, this.numberOfFiles))
 			{
-				System.out.println("\tDestination test: Good" + "\n\tNumber of files matches.");
+				System.out.println("\tDestination test: Good" + " - Number of files matches.");
 			} else
 			{
-				System.out.println("\tDestination test: Bad" + "\nNumber of files mismatch.");
+				System.out.println("\tDestination test: Bad" + " - Number of files mismatch.");
 			}
 			runnableClass.getLock().notifyAll();
 		}
