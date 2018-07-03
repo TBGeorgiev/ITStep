@@ -1,4 +1,4 @@
-package com.seeburger.fileTransferAutomation;
+package com.seeburger.files;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,8 +27,9 @@ public final class ChecksumUtilities
 		fis.close();
 		return complete.digest();
 	}
-	
-	public static String getMD5(File fileLocation) {
+
+	public static String getMD5(File fileLocation)
+	{
 		String result = "";
 		byte[] b1;
 		try
