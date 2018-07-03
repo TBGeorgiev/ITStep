@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Thread which performs the file consistency
+ * checks for the files before and after moving.
+ */
+
 public class ConsistencyChecker implements Runnable
 {
 	private RunnableClass runnableClass;
