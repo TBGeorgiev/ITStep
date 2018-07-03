@@ -47,7 +47,7 @@ public class ConsistencyChecker implements Runnable
 		}
 	}
 
-	private void checkFiles(String destinationString, LinkedHashMap<String, String> bytesList2) throws Exception
+	private void checkFiles(String destinationString, LinkedHashMap<String, String> bytesList) throws Exception
 	{
 		ArrayList<String> sourceByteStrings = new ArrayList<String>();
 		File folder = new File(destinationString);
@@ -63,7 +63,7 @@ public class ConsistencyChecker implements Runnable
 
 		int index = 0;
 		System.out.println("File integrity tests:");
-		for (Map.Entry<String, String> map : bytesList2.entrySet())
+		for (Map.Entry<String, String> map : bytesList.entrySet())
 		{
 			if (map.getValue().equals(sourceByteStrings.get(index)))
 			{
