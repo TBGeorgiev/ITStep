@@ -1,4 +1,4 @@
-package com.seeburger.fileTransferAutomation;
+package com.seeburger.server;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -40,7 +40,7 @@ public class Main
 		//second boolean is for location and destination tests
 		try
 		{
-			ServerSocket serverSocket = new ServerSocket(555);
+			ServerSocket serverSocket = new ServerSocket(21000);
 			
 			while (!RunnableClass.getToStop())
 			{
@@ -48,6 +48,7 @@ public class Main
 				if (socket.isConnected()) {
 					DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
 					DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+					
 					dataOutputStream.writeUTF(printMainMenu());
 					Finder finder = new Finder(executorService, false, false, dataOutputStream, dataInputStream);
 					int choice = Integer.parseInt(dataInputStream.readUTF());
@@ -103,13 +104,13 @@ public class Main
 				
 			} catch (IOException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			break;
 		}
 		return finder;
 	}
+	
 	private static String printMainMenu() {
 		return("1: Transfer file with no tests.\n2: Transfer files with MD5 Checksum tests only.\n3: Transfer files with location tests only.\n4: Transfer files with both tests enabled.");
 	}
