@@ -1,4 +1,4 @@
-package com.seeburger.fileTransferAutomation;
+package com.seeburger.server;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -40,7 +40,6 @@ public class DestinationChecker implements Runnable
 
 				} catch (InterruptedException e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -49,10 +48,8 @@ public class DestinationChecker implements Runnable
 				this.dout.writeUTF("Location and destination tests:");
 			} catch (IOException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-//			System.out.println("Location and destination tests:");
 			if (isLocationEmpty(this.location))
 			{
 				try
@@ -60,11 +57,8 @@ public class DestinationChecker implements Runnable
 					this.dout.writeUTF("\tLocation test: Good" + " - No files present.");
 				} catch (IOException e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-//				System.out.println("\tLocation test: Good" + " - No files present.");
 			} else
 			{
 				try
@@ -72,10 +66,8 @@ public class DestinationChecker implements Runnable
 					this.dout.writeUTF("\tLocation test: Bad" + " - Files still present in location: " + this.location);
 				} catch (IOException e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-//				System.out.println("\tLocation test: Bad" + " - Files still present in location: " + this.location);
 			}
 			if (destinationTest(this.destination, this.numberOfFiles))
 			{
@@ -84,10 +76,8 @@ public class DestinationChecker implements Runnable
 					this.dout.writeUTF("\tDestination test: Good" + " - Number of files matches.");
 				} catch (IOException e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-//				System.out.println("\tDestination test: Good" + " - Number of files matches.");
 			} else
 			{
 				try
@@ -95,10 +85,8 @@ public class DestinationChecker implements Runnable
 					this.dout.writeUTF("\tDestination test: Bad" + " - Number of files mismatch.");
 				} catch (IOException e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-//				System.out.println("\tDestination test: Bad" + " - Number of files mismatch.");
 			}
 			runnableClass.getLock().notifyAll();
 		}
