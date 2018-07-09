@@ -1,4 +1,4 @@
-package com.seeburger.fileTransferAutomation;
+package com.seeburger.server;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -68,7 +68,7 @@ public class RunnableClass implements Runnable
 						Files.delete(Paths.get(file.getAbsolutePath()));
 						if (toStop)
 						{
-							System.out.println("Operation stopped.");
+							dout.writeUTF("Operation stopped.");
 							return;
 						}
 
@@ -82,9 +82,12 @@ public class RunnableClass implements Runnable
 			lock.notifyAll();
 			long end = System.currentTimeMillis();
 			movingFinished = true;
-			System.out.println("Moving complete. Operation took: " + (end - current) + " miliseconds. "
-					+ Thread.currentThread().getName());
-			System.out.println("Enter 'y' if you want to continue or 'end' if you want to exit.");
+			try {
+				dout.writeUTF("Moving complete. Operation took: " + (end - current) + " miliseconds. ");
+				dout.writeUTF("Enter 'y' if you want to continue or 'end' if you want to exit.");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
