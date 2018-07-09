@@ -1,4 +1,4 @@
-package com.seeburger.fileTransferAutomation;
+package com.seeburger.server;
 
 import java.io.File;
 import java.io.FileInputStream;
