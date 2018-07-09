@@ -1,4 +1,4 @@
-package com.seeburger.fileTransferAutomation;
+package com.seeburger.server;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -71,17 +71,14 @@ public class ConsistencyChecker implements Runnable
 
 		int index = 0;
 		this.dout.writeUTF("File integrity tests:");
-//		System.out.println("File integrity tests:");
 		for (Map.Entry<String, String> map : bytesList.entrySet())
 		{
 			if (map.getValue().equals(sourceByteStrings.get(index)))
 			{
 				this.dout.writeUTF("\tMatching file: " + map.getKey());
-//				System.out.println("\tMatching file: " + map.getKey());
 			} else
 			{
 				this.dout.writeUTF("\tMismatching file: " + map.getKey());
-//				System.out.println("\tMismatching file: " + map.getKey());
 			}
 			index++;
 		}
